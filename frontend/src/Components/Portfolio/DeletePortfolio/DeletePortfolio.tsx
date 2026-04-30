@@ -5,7 +5,7 @@ interface Props {
   portfolioValue: string;
 }
 
-//botão delete
+//botão deletee
 const DeletePortfolio = ({ onPortfolioDelete, portfolioValue }: Props) => {
   return (
     <div>
