@@ -6,7 +6,9 @@
 //   symbol: string;
 // }
 
+
 export interface CompanySearch {
+  //name: ReactNode;
   description: string;      // ex: "APPLE INC"  → era "name"
   displaySymbol: string;    // ex: "AAPL"
   symbol: string;           // ex: "AAPL"
@@ -14,41 +16,17 @@ export interface CompanySearch {
 }
 
 export interface CompanyProfile {
-  symbol: string;
-  price: number;
-  beta: number;
-  volAvg: number;
-  mktCap: number;
-  lastDiv: number;
-  range: string;
-  changes: number;
-  companyName: string;
-  currency: string;
-  cik: string;
-  isin: string;
+  name: string;
+  ticker: string;              // FinnHub utiliza ticker em vez de symbol aqui
   exchange: string;
-  exchangeShortName: string;
-  industry: string;
-  website: string;
-  description: string;
-  ceo: string;
-  sector: string;
-  counter: string;
-  fullTimeEmployees: string;
-  phone: string;
-  address: string;
-  city: string;
-  state: string;
-  zip: string;
-  dcfDiff: number;
-  dcf: number;
-  image: string;
-  ipoDate: string;
-  defaultImage: boolean;
-  isEtf: boolean;
-  isActivelyTrading: boolean;
-  isAdr: boolean;
-  isFund: boolean;
+  finnhubIndustry: string;     // Nome específico da API FinnHub
+  marketCapitalization: number; 
+  weburl: string;              // FinnHub utiliza weburl em vez de website
+  logo: string;
+  country: string;
+  currency: string;
+  ipo: string;
+  shareOutstanding: number;
 }
 
 export interface CompanyKeyRatios {
