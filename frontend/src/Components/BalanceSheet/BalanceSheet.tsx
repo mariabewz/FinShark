@@ -3,6 +3,7 @@ import {useOutletContext} from "react-router-dom";
 import {FinnhubReportedFinancial, getBalanceSheet} from "../../api";
 import RatioList from "../RatioList/RatioList";
 import {formatLargeMonetaryNumber} from "../../Helpers/NumberFormatting";
+import Spinner from "../Spinner/Spinner";
 
 const getValue = (report: FinnhubReportedFinancial, concepts: string[]) => {
     const data = report.report?.bs || [];
@@ -28,7 +29,7 @@ const BalanceSheet = () => {
         fetchData();
     }, [ticker]);
 
-    if (!companyData) return <div>Loading balance sheet...</div>;
+    if (!companyData) return <Spinner />;
 
     const config = [
         {

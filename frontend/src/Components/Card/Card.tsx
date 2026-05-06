@@ -27,7 +27,6 @@ const Card: React.FC<Props> = ({
         className="font-bold text-center text-veryDarkViolet md:text-left"
       >
                 {searchResult.description} ({searchResult.symbol})
-                
               </Link>
         <p className="text-black">{searchResult.type}</p>
         <p className="font-bold text-black">

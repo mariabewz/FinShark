@@ -3,6 +3,7 @@ import { useOutletContext } from "react-router-dom";
 import Table from "../Table/Table";
 import { FinnhubReportedFinancial, getIncomeStatement } from "../../api";
 import { formatLargeMonetaryNumber } from "../../Helpers/NumberFormatting";
+import Spinner from "../Spinner/Spinner";
 
 type Props = {};
 
@@ -79,7 +80,7 @@ const IncomeStatement = (props: Props) => {
       {incomeStatement && incomeStatement.length > 0 ? (
         <Table config={configs} data={incomeStatement} />
       ) : (
-        <h1>Loading income statement...</h1>
+        <Spinner />
       )}
     </>
   );
