@@ -61,6 +61,33 @@ const configs = [
         ])
       ),
   },
+
+  {
+    label: "Gross Profit",
+    render: (company: FinnhubReportedFinancial) =>
+      formatLargeMonetaryNumber(
+        getValue(company, [
+          "us-gaap_GrossProfit",
+          "us-gaap_GrossProfitLoss",
+        ])
+      ),
+  },
+  {
+    label: "Gross Margin Ratio",
+    render: (company: FinnhubReportedFinancial) => {
+      const revenue = getValue(company, [
+        "us-gaap_RevenueFromContractWithCustomerExcludingAssessedTax",
+        "us-gaap_Revenues",
+        "us-gaap_SalesRevenueNet",
+      ]);
+      const grossProfit = getValue(company, [
+        "us-gaap_GrossProfit",
+        "us-gaap_GrossProfitLoss",
+      ]);
+
+      return revenue ? `${((grossProfit / revenue) * 100).toFixed(2)}%` : "N/A";
+    },
+  },
 ];
 
 const IncomeStatement = (props: Props) => {

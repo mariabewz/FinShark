@@ -113,6 +113,24 @@ export const getStockQuote = async (symbol: string): Promise<FinnhubQuote> => {
   }
 };
 
+export const getCompData = async (symbol: string): Promise<string[]> => {
+  try {
+    const response = await axios.get<string[]>(
+      `https://finnhub.io/api/v1/stock/peers?symbol=${symbol}&token=${process.env.REACT_APP_API_KEY}`
+    );
+
+    return response.data.filter((ticker) => ticker !== symbol);
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.log("error message: ", error.message);
+    } else {
+      console.log("unexpected error: ", error);
+    }
+
+    return [];
+  }
+};
+
 export const getKeyMetrics = async (symbol: string): Promise<CompanyKeyMetrics> => {
   try {
     const response = await axios.get<CompanyKeyMetricsResponse>(
