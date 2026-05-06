@@ -17,6 +17,7 @@ const CompanyPage = (props: Props) => {
     { id: 4, title: "Cash Flow", icon: "fas fa-money-check-alt", content: "step 4 content" },
   ];
 
+
   const [company, setCompany] = useState<CompanyProfile>();
   const [activeSidebarItem, setActiveSideBarItem] = useState<number>(1);
 
@@ -38,10 +39,10 @@ const CompanyPage = (props: Props) => {
             setActiveSideBarItem={setActiveSideBarItem}
             activeSidebarItem={activeSidebarItem}
           />
-
           <CompanyDashboard 
             tabItems={tabItems} 
             activeSidebarItem={activeSidebarItem}
+            ticker={ticker!}
           >
             <Tile title="Company Name" subTitle={company.name} />
             <Tile title="Ticker" subTitle={company.ticker} />

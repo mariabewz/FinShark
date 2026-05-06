@@ -18,6 +18,12 @@ const Navbar = (props: Props) => {
             <Link to="/search" className="text-black hover:text-darkBlue">
               Search
             </Link>
+            <Link
+              to="/design-guide"
+              className="ml-6 text-black hover:text-darkBlue"
+            >
+              Design Guide
+            </Link>
           </div>
         </div>
         <div className="hidden lg:flex items-center space-x-6 text-back">
