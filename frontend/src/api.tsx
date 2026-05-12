@@ -4,6 +4,7 @@ import {
   CompanyKeyMetricsResponse,
   CompanyProfile,
   CompanySearch,
+  CompanyTenK,
 } from "./company";
 
 export interface FinnhubReportedFinancial {
@@ -180,6 +181,19 @@ export const getCashFlowStatement = async (query: string) => {
             `https://finnhub.io/api/v1/stock/financials-reported?symbol=${query}&token=${process.env.REACT_APP_API_KEY}`
         );
         return response.data.data;
+    } catch (error: any) {
+        console.log(error.message);
+        return [];
+    }
+};
+
+
+export const getTenK = async (query: string): Promise<CompanyTenK[]> => {
+    try {
+        const response = await axios.get<CompanyTenK[]>(
+                `https://finnhub.io/api/v1/stock/filings?symbol=${query}&token=${process.env.REACT_APP_API_KEY}`
+                );
+        return response.data.filter((filing) => filing.form === "10-K");
     } catch (error: any) {
         console.log(error.message);
         return [];

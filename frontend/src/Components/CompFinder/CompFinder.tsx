@@ -22,15 +22,9 @@ const CompFinder = ({ ticker }: Props) => {
     return (
         <div className="inline-flex flex-wrap gap-2 m-4">
             {companyData ? (
-                companyData.length > 0 ? (
-                    companyData.map((ticker) => (
-                        <CompFinderItem key={ticker} ticker={ticker} />
-                    ))
-                ) : (
-                    <p className="text-sm text-blueGray-500">
-                        No comparable companies found.
-                    </p>
-                )
+                companyData.map((ticker, index) => (
+                    <CompFinderItem key={index} ticker={ticker} />
+                ))
             ) : (
                 <Spinner />
             )}
