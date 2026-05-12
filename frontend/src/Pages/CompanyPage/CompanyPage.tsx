@@ -8,6 +8,10 @@ import Tile from "../../Components/Tile/Tile";
 import Spinner from "../../Components/Spinner/Spinner";
 import CompFinder from "../../Components/CompFinder/CompFinder";
 import TenKFinder from "../../Components/TenKFinder/TenKFinder";
+import {
+  formatLargeMonetaryNumber,
+  formatLargeNonMonetaryNumber,
+} from "../../Helpers/NumberFormatting";
 
 interface Props { }
 
@@ -56,12 +60,17 @@ const CompanyPage = (props: Props) => {
             <Tile title="Ticker" subTitle={company.ticker} />
             <Tile
               title="Price"
-              subTitle={price ? `$${price.toFixed(2)}` : "N/A"}
+              subTitle={price ? formatLargeMonetaryNumber(price) : "N/A"}
             />
+
             <Tile title="Industry" subTitle={company.finnhubIndustry} />
             <Tile
               title="Market Cap"
-              subTitle={company.marketCapitalization?.toString() || "0"}
+              subTitle={
+                company.marketCapitalization
+                  ? formatLargeNonMonetaryNumber(company.marketCapitalization)
+                  : "N/A"
+              }
             />
             <Tile title="Website" subTitle={company.weburl} />
             <CompFinder ticker={ticker!} />

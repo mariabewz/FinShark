@@ -2,8 +2,11 @@ import React, { useState, useEffect } from "react";
 import { useOutletContext } from "react-router-dom";
 import Table from "../Table/Table";
 import { FinnhubReportedFinancial, getIncomeStatement } from "../../api";
-import { formatLargeMonetaryNumber } from "../../Helpers/NumberFormatting";
 import Spinner from "../Spinner/Spinner";
+import {
+  formatLargeMonetaryNumber,
+  formatRatio,
+} from "../../Helpers/NumberFormatting";
 
 type Props = {};
 
@@ -85,7 +88,7 @@ const configs = [
         "us-gaap_GrossProfitLoss",
       ]);
 
-      return revenue ? `${((grossProfit / revenue) * 100).toFixed(2)}%` : "N/A";
+      return revenue ? formatRatio(grossProfit / revenue) : "N/A";
     },
   },
 ];

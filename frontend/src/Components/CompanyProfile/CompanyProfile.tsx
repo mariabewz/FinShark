@@ -4,33 +4,51 @@ import { CompanyKeyMetrics } from "../../company";
 import { getKeyMetrics } from "../../api";
 import RatioList from "../RatioList/RatioList";
 import Spinner from "../Spinner/Spinner";
+import {
+  formatLargeNonMonetaryNumber,
+  formatRatio,
+} from "../../Helpers/NumberFormatting";
 
 type Props = {};
 
 const tableConfig = [
   {
     label: "Market Cap",
-    render: (company: CompanyKeyMetrics) => company.marketCapTTM,
+    render: (company: CompanyKeyMetrics) =>
+      formatLargeNonMonetaryNumber(
+        company.marketCapTTM || company.marketCapitalization || 0
+      ),
+    subTitle: "Total value of all a company's shares of stock",
   },
   {
     label: "Current Ratio",
-    render: (company: CompanyKeyMetrics) => company.currentRatioTTM,
+    render: (company: CompanyKeyMetrics) =>
+      formatRatio(company.currentRatioTTM),
+    subTitle:
+      "Measures the company's ability to pay short term debt obligations",
   },
   {
     label: "Return On Equity",
-    render: (company: CompanyKeyMetrics) => company.roeTTM,
+    render: (company: CompanyKeyMetrics) => formatRatio(company.roeTTM),
+    subTitle:
+      "Return on equity is net income divided by shareholder equity",
   },
   {
     label: "Cash Per Share",
-    render: (company: CompanyKeyMetrics) => company.cashPerShareTTM,
+    render: (company: CompanyKeyMetrics) =>
+      formatRatio(company.cashPerShareTTM),
+    subTitle: "Cash and equivalents available for each share",
   },
   {
-    label: "Current Ratio",
-    render: (company: CompanyKeyMetrics) => company.currentRatioTTM,
+    label: "Free Cashflow Per Share",
+    render: (company: CompanyKeyMetrics) =>
+      formatRatio(company.freeCashFlowPerShareTTM),
+    subTitle: "Free cash flow generated for each share",
   },
   {
-    label: "Return On Equity",
-    render: (company: CompanyKeyMetrics) => company.roeTTM,
+    label: "PE Ratio",
+    render: (company: CompanyKeyMetrics) => formatRatio(company.peRatioTTM),
+    subTitle: "Share price relative to earnings per share",
   },
 ];
 
