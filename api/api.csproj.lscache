@@ -55,8 +55,10 @@ TemporaryDependencyNodeTargetIdentifier=net10.0
 /warnaserror+:NU1605,SYSLIB0011
 
 [sourceFiles]
-Controllers/StockControllers.cs
+Controllers/StockController.cs
 Data/ApplicationDBContext.cs
+Dtos/Stock/StockDto.cs
+Mappers/StockMappers.cs
 Migrations/
  20260515170738_init.cs
  20260515170738_init.Designer.cs
