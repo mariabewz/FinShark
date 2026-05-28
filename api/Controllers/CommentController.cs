@@ -2,9 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using api.Extensions;
 using api.Dtos.Comment;
 using api.Interfaces;
 using api.Mappers;
+using api.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 
@@ -16,10 +20,12 @@ namespace api.Controllers
     {
         private readonly ICommentRepository _commentRepo;
         private readonly IStockRepository _stockRepo;
-        public CommentController(ICommentRepository commentRepo, IStockRepository stockRepo)
+        private readonly UserManager<AppUser> _userManager;
+        public CommentController(ICommentRepository commentRepo, IStockRepository stockRepo, UserManager<AppUser> userManager)
         {
             _commentRepo = commentRepo;
             _stockRepo = stockRepo;
+            _userManager = userManager;
         }
 
         [HttpGet]
@@ -52,10 +58,15 @@ namespace api.Controllers
         }
         [HttpPost]
         [Route("{stockId:int}")]
+        [Authorize]
         public async Task<IActionResult> Create([FromRoute] int stockId, CreateCommentDto commentDto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
+
+            var username = User.GetUsername();
+            var appUser = await _userManager.FindByNameAsync(username);
+            if (appUser == null) return Unauthorized();
 
             if (!await _stockRepo.StockExists(stockId))
             {
@@ -63,6 +74,7 @@ namespace api.Controllers
             }
 
             var commentModel = commentDto.ToCommentFromCreate(stockId);
+            commentModel.AppUserId = appUser.Id;
             await _commentRepo.CreateAsync(commentModel);
             return CreatedAtAction(nameof(GetById), new { id = commentModel.Id }, commentModel.ToCommentDto());
         }
