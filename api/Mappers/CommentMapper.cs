@@ -11,14 +11,17 @@ namespace api.Mappers
     {
         public static CommentDto ToCommentDto(this Comment commentModel)
         {
+#pragma warning disable CS8601 // Possible null reference assignment.
             return new CommentDto
             {
                 Id = commentModel.Id,
                 Title = commentModel.Title,
                 Content = commentModel.Content,
                 CreatedOn = commentModel.CreatedOn,
+                CreatedBy = commentModel.AppUser.UserName,
                 StockId = commentModel.StockId
             };
+#pragma warning restore CS8601 // Possible null reference assignment.
         }
         public static Comment ToCommentFromCreate(this CreateCommentDto commentDto, int stockId)
         {
