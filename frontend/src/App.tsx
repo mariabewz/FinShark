@@ -7,7 +7,9 @@
 // import Hero from "./Components/Hero/Hero";
 import { Outlet } from "react-router";
 import Navbar from "./Components/Navbar/Navbar";
+import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
+import { ToastContainer } from "react-toastify";
 
 function App() {
 
@@ -16,6 +18,7 @@ function App() {
     <>
       <Navbar />
       <Outlet />
+      <ToastContainer />
     </>
   );
 }
