@@ -52,5 +52,71 @@ namespace api.Service
                 return null;
             }
         }
+
+        public async Task<FinnhubSearchResponseDto?> SearchStocksAsync(string query)
+        {
+            try
+            {
+                var apiKey = _config["FinnhubKey"] ?? _config["FMPKey"];
+                var result = await _httpClient.GetAsync($"https://finnhub.io/api/v1/search?q={query}&token={apiKey}");
+
+                if (!result.IsSuccessStatusCode)
+                {
+                    return null;
+                }
+
+                var content = await result.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<FinnhubSearchResponseDto>(content);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return null;
+            }
+        }
+
+        public async Task<FMPStock?> GetCompanyProfileAsync(string symbol)
+        {
+            try
+            {
+                var apiKey = _config["FinnhubKey"] ?? _config["FMPKey"];
+                var result = await _httpClient.GetAsync($"https://finnhub.io/api/v1/stock/profile2?symbol={symbol}&token={apiKey}");
+
+                if (!result.IsSuccessStatusCode)
+                {
+                    return null;
+                }
+
+                var content = await result.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<FMPStock>(content);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return null;
+            }
+        }
+
+        public async Task<FMPQuote?> GetStockQuoteAsync(string symbol)
+        {
+            try
+            {
+                var apiKey = _config["FinnhubKey"] ?? _config["FMPKey"];
+                var result = await _httpClient.GetAsync($"https://finnhub.io/api/v1/quote?symbol={symbol}&token={apiKey}");
+
+                if (!result.IsSuccessStatusCode)
+                {
+                    return null;
+                }
+
+                var content = await result.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<FMPQuote>(content);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return null;
+            }
+        }
     }
 }

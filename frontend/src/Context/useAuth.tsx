@@ -9,8 +9,8 @@ import axios from "axios";
 type UserContextType = {
   user: UserProfile | null;
   token: string | null;
-  registerUser: (email: string, username: string, password: string) => void;
-  loginUser: (username: string, password: string) => void;
+  registerUser: (email: string, username: string, password: string) => Promise<void>;
+  loginUser: (username: string, password: string) => Promise<void>;
   logout: () => void;
   isLoggedIn: () => boolean;
 };
@@ -21,8 +21,13 @@ const UserContext = createContext<UserContextType>({} as UserContextType);
 
 export const UserProvider = ({ children }: Props) => {
   const navigate = useNavigate();
-  const [token, setToken] = useState<string | null>(null);
-  const [user, setUser] = useState<UserProfile | null>(null);
+  const [token, setToken] = useState<string | null>(() =>
+    localStorage.getItem("token")
+  );
+  const [user, setUser] = useState<UserProfile | null>(() => {
+    const savedUser = localStorage.getItem("user");
+    return savedUser ? JSON.parse(savedUser) : null;
+  });
   const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
@@ -41,49 +46,45 @@ export const UserProvider = ({ children }: Props) => {
     username: string,
     password: string
   ) => {
-    await registerAPI(email, username, password)
-      .then((res) => {
-        if (res) {
-          localStorage.setItem("token", res?.data.token);
-          const userObj = {
-            userName: res?.data.userName,
-            email: res?.data.email,
-          };
-          localStorage.setItem("user", JSON.stringify(userObj));
-          setToken(res?.data.token!);
-          setUser(userObj!);
-          axios.defaults.headers.common["Authorization"] =
-            "Bearer " + res.data.token;
-          toast.success("Login Success!");
-          navigate("/search");
-        }
-      })
-      .catch((e) => toast.warning("Server error occured"));
+    const res = await registerAPI(email, username, password);
+
+    if (res) {
+      localStorage.setItem("token", res.data.token);
+      const userObj = {
+        userName: res.data.userName,
+        email: res.data.email,
+      };
+      localStorage.setItem("user", JSON.stringify(userObj));
+      setToken(res.data.token);
+      setUser(userObj);
+      axios.defaults.headers.common["Authorization"] =
+        "Bearer " + res.data.token;
+      toast.success("Login Success!");
+      navigate("/search", { replace: true });
+    }
   };
 
   const loginUser = async (username: string, password: string) => {
-    await loginAPI(username, password)
-      .then((res) => {
-        if (res) {
-          localStorage.setItem("token", res?.data.token);
-          const userObj = {
-            userName: res?.data.userName,
-            email: res?.data.email,
-          };
-          localStorage.setItem("user", JSON.stringify(userObj));
-          setToken(res?.data.token!);
-          setUser(userObj!);
-          axios.defaults.headers.common["Authorization"] =
-            "Bearer " + res.data.token;
-          toast.success("Login Success!");
-          navigate("/search");
-        }
-      })
-      .catch((e) => toast.warning("Server error occured"));
+    const res = await loginAPI(username, password);
+
+    if (res) {
+      localStorage.setItem("token", res.data.token);
+      const userObj = {
+        userName: res.data.userName,
+        email: res.data.email,
+      };
+      localStorage.setItem("user", JSON.stringify(userObj));
+      setToken(res.data.token);
+      setUser(userObj);
+      axios.defaults.headers.common["Authorization"] =
+        "Bearer " + res.data.token;
+      toast.success("Login Success!");
+      navigate("/search", { replace: true });
+    }
   };
 
   const isLoggedIn = () => {
-    return !!user;
+    return !!user || !!token || !!localStorage.getItem("token");
   };
 
   const logout = () => {

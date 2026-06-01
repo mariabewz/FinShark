@@ -62,17 +62,17 @@ export interface SearchResponse {
 export const searchCompanies = async (query: string): Promise<SearchResponse> => {
   try {
     const response = await axios.get<SearchResponse>(
-      `https://finnhub.io/api/v1/search?q=${query}&token=${process.env.REACT_APP_API_KEY}`
+      `http://localhost:5018/api/stock/search?query=${query}`
     );
     return response.data; // retorna só os dados
 
   } catch (error) {
     if (axios.isAxiosError(error)) {
       console.log("error message: ", error.message);
-      throw new Error(error.message); // não retorna string
+      throw new Error(error.response?.data?.error || error.message); // não retorna string
     } else {
       console.log("unexpected error: ", error);
-      throw new Error("Unexpected error occurred.");
+      throw error;
     }
   }
 };

@@ -20,10 +20,56 @@ namespace api.Controllers
     {
         private readonly ApplicationDBContext _context;
         private readonly IStockRepository _stockRepo;
-        public StockController(ApplicationDBContext context, IStockRepository stockRepo)
+        private readonly IFMPService _fmpService;
+        public StockController(ApplicationDBContext context, IStockRepository stockRepo, IFMPService fmpService)
         {
             _stockRepo = stockRepo;
             _context = context;
+            _fmpService = fmpService;
+        }
+
+        [HttpGet("search")]
+        public async Task<IActionResult> Search([FromQuery] string query)
+        {
+            if (string.IsNullOrWhiteSpace(query))
+            {
+                return BadRequest("Query is required");
+            }
+
+            var result = await _fmpService.SearchStocksAsync(query);
+
+            if (result == null)
+            {
+                return StatusCode(503, "Unable to connect to Finnhub API");
+            }
+
+            return Ok(result);
+        }
+
+        [HttpGet("profile/{symbol}")]
+        public async Task<IActionResult> GetCompanyProfile([FromRoute] string symbol)
+        {
+            var result = await _fmpService.GetCompanyProfileAsync(symbol);
+
+            if (result == null)
+            {
+                return StatusCode(503, "Unable to connect to Finnhub API");
+            }
+
+            return Ok(result);
+        }
+
+        [HttpGet("quote/{symbol}")]
+        public async Task<IActionResult> GetStockQuote([FromRoute] string symbol)
+        {
+            var result = await _fmpService.GetStockQuoteAsync(symbol);
+
+            if (result == null)
+            {
+                return StatusCode(503, "Unable to connect to Finnhub API");
+            }
+
+            return Ok(result);
         }
 
         [HttpGet]

@@ -1,5 +1,4 @@
 import React, { useState, ChangeEvent, SyntheticEvent } from "react";
-import Navbar from "../../Components/Navbar/Navbar";
 import { CompanySearch } from "../../company";
 import { searchCompanies } from "../../api";
 import Search from "../../Components/Search/Search";
@@ -40,6 +39,7 @@ const SearchPage = (props: Props) => {
 
   const onSearchSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
+    setServerError(null);
     // const result = await searchCompanies(search);
     //setServerError(result.data);
     // if (typeof result === "string") {
@@ -55,6 +55,7 @@ const SearchPage = (props: Props) => {
       }
     } catch (error: any) {
       setServerError(error.message);
+      setSearchResult([]);
     }
   };
   return (
@@ -73,7 +74,7 @@ const SearchPage = (props: Props) => {
         onPortfolioCreate={onPortfolioCreate}
       />
 
-      {serverError && <div>Unable to connect to API</div>}
+      {serverError && <div>{serverError}</div>}
     </>
   );
 };

@@ -31,13 +31,16 @@ namespace api.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName != null && x.UserName.ToLower() == loginDto.Username.ToLower());
+            var login = loginDto.Username.ToLower();
+            var user = await _userManager.Users.FirstOrDefaultAsync(x =>
+                (x.UserName != null && x.UserName.ToLower() == login) ||
+                (x.Email != null && x.Email.ToLower() == login));
 
-            if (user == null) return Unauthorized("Invalid username!");
+            if (user == null) return Unauthorized("Invalid username or email!");
 
             var result = await _signinManager.CheckPasswordSignInAsync(user, loginDto.Password, false);
 
-            if (!result.Succeeded) return Unauthorized("Username not found and/or password incorrect");
+            if (!result.Succeeded) return Unauthorized("Username/email not found and/or password incorrect");
 
             return Ok(
                 new NewUserDto
