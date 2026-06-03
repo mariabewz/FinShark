@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import StockCommentForm from "./StockCommentForm/StockCommentForm";
 import { commentGetAPI, commentPostAPI } from "../../Services/CommentService";
 import { toast } from "react-toastify";
 import { CommentGet } from "../../Models/Comment";
 import Spinner from "../Spinner/Spinner";
-//import StockCommentList from "../StockCommentList/StockCommentList";
+import StockCommentList from "../StockCommentList/StockCommentList";
 
 type Props = {
     stockSymbol: string;
@@ -20,17 +20,19 @@ const StockComment = ({ stockSymbol }: Props) => {
   const [comments, setComment] = useState<CommentGet[] | null>(null);
     const [loading, setLoading] = useState<boolean>();
 
-    useEffect(() => {
-        getComments();
-    }, []);
-
-
     const handleComment = (e: CommentFormInputs) => {
+        if (!localStorage.getItem("token")) {
+            toast.warning("Please login to post a comment.");
+            return;
+        }
+
         commentPostAPI(e.title, e.content, stockSymbol)
             .then((res) => {
                 if (res) {
                     toast.success("Comment created successfully!");
                     getComments();
+                } else {
+                    toast.warning("Could not create comment. Check if the API is running.");
                 }
             })
             .catch((e) => {
@@ -38,13 +40,17 @@ const StockComment = ({ stockSymbol }: Props) => {
             });
     };
 
-    const getComments = () => {
+    const getComments = useCallback(() => {
         setLoading(true);
         commentGetAPI(stockSymbol).then((res) => {
             setLoading(false);
             setComment(res?.data!);
         });
-    };
+    }, [stockSymbol]);
+
+    useEffect(() => {
+        getComments();
+    }, [getComments]);
     return (
         <div className="flex flex-col">
             {loading ? <Spinner /> : <StockCommentList comments={comments!} />}

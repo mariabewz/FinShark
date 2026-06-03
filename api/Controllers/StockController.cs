@@ -72,6 +72,58 @@ namespace api.Controllers
             return Ok(result);
         }
 
+        [HttpGet("metrics/{symbol}")]
+        public async Task<IActionResult> GetKeyMetrics([FromRoute] string symbol)
+        {
+            var result = await _fmpService.GetKeyMetricsAsync(symbol);
+
+            if (result == null)
+            {
+                return StatusCode(503, "Unable to connect to Finnhub API");
+            }
+
+            return Ok(result);
+        }
+
+        [HttpGet("peers/{symbol}")]
+        public async Task<IActionResult> GetPeers([FromRoute] string symbol)
+        {
+            var result = await _fmpService.GetPeersAsync(symbol);
+
+            if (result == null)
+            {
+                return StatusCode(503, "Unable to connect to Finnhub API");
+            }
+
+            return Ok(result);
+        }
+
+        [HttpGet("financials-reported/{symbol}")]
+        public async Task<IActionResult> GetReportedFinancials([FromRoute] string symbol)
+        {
+            var result = await _fmpService.GetReportedFinancialsAsync(symbol);
+
+            if (result == null)
+            {
+                return StatusCode(503, "Unable to connect to Finnhub API");
+            }
+
+            return Ok(result);
+        }
+
+        [HttpGet("filings/{symbol}")]
+        public async Task<IActionResult> GetFilings([FromRoute] string symbol)
+        {
+            var result = await _fmpService.GetFilingsAsync(symbol);
+
+            if (result == null)
+            {
+                return StatusCode(503, "Unable to connect to Finnhub API");
+            }
+
+            return Ok(result);
+        }
+
         [HttpGet]
         [Authorize]
         public async Task<IActionResult> GetAll([FromQuery] QueryObject query)

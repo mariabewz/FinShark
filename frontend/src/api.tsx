@@ -64,12 +64,12 @@ export const searchCompanies = async (query: string): Promise<SearchResponse> =>
     const response = await axios.get<SearchResponse>(
       `http://localhost:5018/api/stock/search?query=${query}`
     );
-    return response.data; // retorna só os dados
+    return response.data;
 
   } catch (error) {
     if (axios.isAxiosError(error)) {
       console.log("error message: ", error.message);
-      throw new Error(error.response?.data?.error || error.message); // não retorna string
+      throw new Error(error.response?.data?.error || error.message);
     } else {
       console.log("unexpected error: ", error);
       throw error;
@@ -81,7 +81,7 @@ export const searchCompanies = async (query: string): Promise<SearchResponse> =>
 export const getCompanyProfile = async (symbol: string): Promise<CompanyProfile> => {
   try {
     const response = await axios.get<CompanyProfile>(
-      `https://finnhub.io/api/v1/stock/profile2?symbol=${symbol}&token=${process.env.REACT_APP_API_KEY}`
+      `http://localhost:5018/api/stock/profile/${symbol}`
     );
 
     return response.data;
@@ -99,7 +99,7 @@ export const getCompanyProfile = async (symbol: string): Promise<CompanyProfile>
 export const getStockQuote = async (symbol: string): Promise<FinnhubQuote> => {
   try {
     const response = await axios.get<FinnhubQuote>(
-      `https://finnhub.io/api/v1/quote?symbol=${symbol}&token=${process.env.REACT_APP_API_KEY}`
+      `http://localhost:5018/api/stock/quote/${symbol}`
     );
 
     return response.data;
@@ -117,7 +117,7 @@ export const getStockQuote = async (symbol: string): Promise<FinnhubQuote> => {
 export const getCompData = async (symbol: string): Promise<string[]> => {
   try {
     const response = await axios.get<string[]>(
-      `https://finnhub.io/api/v1/stock/peers?symbol=${symbol}&token=${process.env.REACT_APP_API_KEY}`
+      `http://localhost:5018/api/stock/peers/${symbol}`
     );
 
     return response.data.filter((ticker) => ticker !== symbol);
@@ -135,7 +135,7 @@ export const getCompData = async (symbol: string): Promise<string[]> => {
 export const getKeyMetrics = async (symbol: string): Promise<CompanyKeyMetrics> => {
   try {
     const response = await axios.get<CompanyKeyMetricsResponse>(
-      `https://finnhub.io/api/v1/stock/metric?symbol=${symbol}&metric=all&token=${process.env.REACT_APP_API_KEY}`
+      `http://localhost:5018/api/stock/metrics/${symbol}`
     );
 
     return response.data.metric;
@@ -153,7 +153,7 @@ export const getKeyMetrics = async (symbol: string): Promise<CompanyKeyMetrics> 
 export const getIncomeStatement = async (query: string): Promise<FinnhubReportedFinancial[]> => {
   try {
     const response = await axios.get<FinnhubReportedFinancialsResponse>(
-      `https://finnhub.io/api/v1/stock/financials-reported?symbol=${query}&token=${process.env.REACT_APP_API_KEY}`
+      `http://localhost:5018/api/stock/financials-reported/${query}`
     );
     return response.data.data;
   } catch (error: any) {
@@ -165,7 +165,7 @@ export const getIncomeStatement = async (query: string): Promise<FinnhubReported
 export const getBalanceSheet = async (query: string) => {
     try {
         const response = await axios.get<FinnhubReportedFinancialsResponse>(
-            `https://finnhub.io/api/v1/stock/financials-reported?symbol=${query}&token=${process.env.REACT_APP_API_KEY}`
+            `http://localhost:5018/api/stock/financials-reported/${query}`
         );
         return response.data.data;
     } catch (error: any) {
@@ -178,7 +178,7 @@ export const getBalanceSheet = async (query: string) => {
 export const getCashFlowStatement = async (query: string) => {
     try {
         const response = await axios.get<FinnhubReportedFinancialsResponse>(
-            `https://finnhub.io/api/v1/stock/financials-reported?symbol=${query}&token=${process.env.REACT_APP_API_KEY}`
+            `http://localhost:5018/api/stock/financials-reported/${query}`
         );
         return response.data.data;
     } catch (error: any) {
@@ -191,7 +191,7 @@ export const getCashFlowStatement = async (query: string) => {
 export const getTenK = async (query: string): Promise<CompanyTenK[]> => {
     try {
         const response = await axios.get<CompanyTenK[]>(
-                `https://finnhub.io/api/v1/stock/filings?symbol=${query}&token=${process.env.REACT_APP_API_KEY}`
+                `http://localhost:5018/api/stock/filings/${query}`
                 );
         return response.data.filter((filing) => filing.form === "10-K");
     } catch (error: any) {

@@ -17,6 +17,7 @@ interface Props { }
 
 const CompanyPage = (props: Props) => {
   let { ticker } = useParams();
+  const currentTicker = ticker!;
   const tabItems = [
     { id: 1, title: "Company Profile", icon: "fas fa-child", content: "step 1 content" },
     { id: 2, title: "Income Statement", icon: "fas fa-users", content: "step 2 content" },
@@ -56,8 +57,8 @@ const CompanyPage = (props: Props) => {
             activeSidebarItem={activeSidebarItem}
             ticker={ticker!}
           >
-            <Tile title="Company Name" subTitle={company.name} />
-            <Tile title="Ticker" subTitle={company.ticker} />
+            <Tile title="Company Name" subTitle={company.name || currentTicker} />
+            <Tile title="Ticker" subTitle={company.ticker || currentTicker} />
             <Tile
               title="Price"
               subTitle={price ? formatLargeMonetaryNumber(price) : "N/A"}
@@ -72,11 +73,11 @@ const CompanyPage = (props: Props) => {
                   : "N/A"
               }
             />
-            <Tile title="Website" subTitle={company.weburl} />
-            <CompFinder ticker={ticker!} />
-            <TenKFinder ticker={company.ticker || ticker!} />
+            <Tile title="Website" subTitle={company.weburl || "N/A"} />
+            <CompFinder ticker={currentTicker} />
+            <TenKFinder ticker={company.ticker || currentTicker} />
             <p className="bg-white shadow rounded text-medium font-medium text-gray-900 p-3 mt-1 m-4">
-              {company.name} is listed on {company.exchange}
+              {company.name || currentTicker} is listed on {company.exchange}
               {company.finnhubIndustry
                 ? ` and operates in the ${company.finnhubIndustry} industry.`
                 : "."}

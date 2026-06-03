@@ -69,7 +69,7 @@ const SearchPage = (props: Props) => {
     const onPortfolioDelete = (e: any) => {
         e.preventDefault();
         portfolioDeleteAPI(e.target[0].value).then((res) => {
-            if (res?.status == 200) {
+            if (res?.status === 200) {
                 toast.success("Stock deleted from portfolio!");
                 getPortfolio();
             }
@@ -78,18 +78,19 @@ const SearchPage = (props: Props) => {
 
     const onSearchSubmit = async (e: SyntheticEvent) => {
         e.preventDefault();
+        setServerError(null);
 
         if (!localStorage.getItem("token")) {
             window.location.href = "/login";
             return;
         }
 
-        const result = await searchCompanies(search);
-
-        if (typeof result === "string") {
-            setServerError(result);
-        } else if (Array.isArray(result)) {
-            setSearchResult(result);
+        try {
+            const result = await searchCompanies(search);
+            setSearchResult(result.result || []);
+        } catch (error: any) {
+            setSearchResult([]);
+            setServerError(error.message);
         }
     };
 
@@ -109,7 +110,7 @@ const SearchPage = (props: Props) => {
                 onPortfolioCreate={onPortfolioCreate}
             />
 
-            {serverError && <div>Unable to connect to API</div>}
+            {serverError && <div>{serverError}</div>}
         </>
     );
 };

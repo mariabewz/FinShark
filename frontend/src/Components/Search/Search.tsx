@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState, SyntheticEvent, JSX, FormEvent } from "react";
+import React, { ChangeEvent, SyntheticEvent, JSX } from "react";
 
 //as props repassam os dados, elas são o canal q comunica as info
 interface Props {

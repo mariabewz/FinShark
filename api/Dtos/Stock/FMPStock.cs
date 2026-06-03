@@ -28,6 +28,7 @@ namespace api.Dtos.Stock
         public string industry { get; set; } = string.Empty;
         public string finnhubIndustry { get; set; } = string.Empty;
         public string website { get; set; } = string.Empty;
+        public string weburl { get; set; } = string.Empty;
         public string description { get; set; } = string.Empty;
         public string ceo { get; set; } = string.Empty;
         public string sector { get; set; } = string.Empty;
@@ -41,7 +42,10 @@ namespace api.Dtos.Stock
         public double dcfDiff { get; set; }
         public double dcf { get; set; }
         public string image { get; set; } = string.Empty;
+        public string logo { get; set; } = string.Empty;
         public string ipoDate { get; set; } = string.Empty;
+        public string ipo { get; set; } = string.Empty;
+        public double shareOutstanding { get; set; }
         public bool defaultImage { get; set; }
         public bool isEtf { get; set; }
         public bool isActivelyTrading { get; set; }

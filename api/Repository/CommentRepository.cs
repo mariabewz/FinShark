@@ -44,7 +44,8 @@ namespace api.Repository
 
             if (!string.IsNullOrWhiteSpace(queryObject.Symbol))
             {
-                comments = comments.Where(s => s.Stock != null && s.Stock.Symbol == queryObject.Symbol);
+                var normalizedSymbol = queryObject.Symbol.ToLower();
+                comments = comments.Where(s => s.Stock != null && s.Stock.Symbol.ToLower() == normalizedSymbol);
             }
 
             if (queryObject.IsDecsending == true)

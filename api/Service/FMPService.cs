@@ -7,6 +7,7 @@ using api.Interfaces;
 using api.Mappers;
 using api.Models;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace api.Service
 {
@@ -88,7 +89,20 @@ namespace api.Service
                 }
 
                 var content = await result.Content.ReadAsStringAsync();
-                return JsonConvert.DeserializeObject<FMPStock>(content);
+                var stock = JsonConvert.DeserializeObject<FMPStock>(content);
+                if (stock == null)
+                {
+                    return null;
+                }
+
+                stock.symbol = string.IsNullOrWhiteSpace(stock.symbol) ? symbol.ToUpper() : stock.symbol;
+                stock.ticker = string.IsNullOrWhiteSpace(stock.ticker) ? stock.symbol : stock.ticker;
+                stock.weburl = string.IsNullOrWhiteSpace(stock.weburl) ? stock.website : stock.weburl;
+                stock.logo = string.IsNullOrWhiteSpace(stock.logo) ? stock.image : stock.logo;
+                stock.ipo = string.IsNullOrWhiteSpace(stock.ipo) ? stock.ipoDate : stock.ipo;
+                stock.name = string.IsNullOrWhiteSpace(stock.name) ? stock.companyName : stock.name;
+
+                return stock;
             }
             catch (Exception e)
             {
@@ -111,6 +125,94 @@ namespace api.Service
 
                 var content = await result.Content.ReadAsStringAsync();
                 return JsonConvert.DeserializeObject<FMPQuote>(content);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return null;
+            }
+        }
+
+        public async Task<JObject?> GetKeyMetricsAsync(string symbol)
+        {
+            try
+            {
+                var apiKey = _config["FinnhubKey"] ?? _config["FMPKey"];
+                var result = await _httpClient.GetAsync($"https://finnhub.io/api/v1/stock/metric?symbol={symbol}&metric=all&token={apiKey}");
+
+                if (!result.IsSuccessStatusCode)
+                {
+                    return null;
+                }
+
+                var content = await result.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<JObject>(content);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return null;
+            }
+        }
+
+        public async Task<JArray?> GetPeersAsync(string symbol)
+        {
+            try
+            {
+                var apiKey = _config["FinnhubKey"] ?? _config["FMPKey"];
+                var result = await _httpClient.GetAsync($"https://finnhub.io/api/v1/stock/peers?symbol={symbol}&token={apiKey}");
+
+                if (!result.IsSuccessStatusCode)
+                {
+                    return null;
+                }
+
+                var content = await result.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<JArray>(content);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return null;
+            }
+        }
+
+        public async Task<JObject?> GetReportedFinancialsAsync(string symbol)
+        {
+            try
+            {
+                var apiKey = _config["FinnhubKey"] ?? _config["FMPKey"];
+                var result = await _httpClient.GetAsync($"https://finnhub.io/api/v1/stock/financials-reported?symbol={symbol}&token={apiKey}");
+
+                if (!result.IsSuccessStatusCode)
+                {
+                    return null;
+                }
+
+                var content = await result.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<JObject>(content);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return null;
+            }
+        }
+
+        public async Task<JArray?> GetFilingsAsync(string symbol)
+        {
+            try
+            {
+                var apiKey = _config["FinnhubKey"] ?? _config["FMPKey"];
+                var result = await _httpClient.GetAsync($"https://finnhub.io/api/v1/stock/filings?symbol={symbol}&token={apiKey}");
+
+                if (!result.IsSuccessStatusCode)
+                {
+                    return null;
+                }
+
+                var content = await result.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<JArray>(content);
             }
             catch (Exception e)
             {
